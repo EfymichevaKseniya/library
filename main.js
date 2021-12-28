@@ -1,14 +1,14 @@
-let books = [];
+let booksItems = [];
 
 function renderBooks(book) {
-  localStorage.setItem('books', JSON.stringify(books));
+  localStorage.setItem('booksItems', JSON.stringify(booksItems));
 
   const list = document.querySelector('.books__items');
   const item = document.querySelector(`[data-key='${book.id}']`);
 
   if (book.deleted) {
     item.remove();
-    if (books.length === 0) list.innerHTML = '';
+    if (booksItems.length === 0) list.innerHTML = '';
     return
   }
   const isRead = book.checked ? 'done': '';
@@ -16,12 +16,12 @@ function renderBooks(book) {
   node.setAttribute('class', `book__item ${isRead}`);
   node.setAttribute('data-key', book.id);
   node.innerHTML = `
-    <div class='book__item-btns'>
     <span class='book__item-title'>${book.title}</span>
-      <button class="book__btn done__book">
-        ${book.checked ? 'unread' : 'read'}
-      </button>
-      <button class="book__btn delete__book">delete</button>
+    <div class='book__item-btns'>
+      <button class="book__btn edit__book">ред.</button>
+      <button class="book__btn read__book">читать</button>
+      <button class= 'book__btn done__book'>прочитано</button>
+      <button class="book__btn delete__book">x</button>
     </div>
   `;
 
@@ -33,7 +33,6 @@ function renderBooks(book) {
 }
 
 function addBook(title, text) {
-  console.log(books)
   const book = {
     text,
     title,
@@ -41,7 +40,7 @@ function addBook(title, text) {
     id: Math.floor(Math.random() * 10000),
   };
 
-  books.push(book);
+  booksItems.push(book);
   renderBooks(book);
 }
 
@@ -63,8 +62,11 @@ const form = document.querySelector('#content2');
         return response.json();
       })
       .then((data) => {
-        console.log(data);
-        addBook(input.value, data.text);
+        if (input.value === '') {
+          addBook(data.title, data.text);
+        } else {
+          addBook(input.value, data.text);
+        }
         input.value = '';
       });
   });
@@ -88,13 +90,81 @@ const form = document.querySelector('#content2');
     });
   });
 
+  function toggleDone(key) {
+    const index = booksItems.findIndex((item) => item.id === Number(key));
+    booksItems[index].checked = !booksItems[index].checked;
+    renderBooks(booksItems[index]);
+  }
+
+  function readBook(key) {
+    const index = booksItems.findIndex((item) => item.id === Number(key));
+    const readArea = document.querySelector('.read-area');
+    readArea.innerHTML = '';
+
+    const node = document.createElement('div');
+    node.setAttribute('class', 'read__area-wrapper');
+    node.innerHTML = `
+    <h2 class='read__area-title'>${booksItems[index].title}</h2>
+    <p class='read__area-text'>${booksItems[index].text}</p>
+    `;
+    readArea.append(node);
+  }
+
+  function editBook(key) {
+    const index = booksItems.findIndex((item) => item.id === Number(key));
+    const readArea = document.querySelector('.read-area');
+    readArea.innerHTML = '';
+
+    const node = document.createElement('form');
+    node.setAttribute('class', 'form__content');
+    node.innerHTML = `
+    <input class="form__content-input" type="text" placeholder=${booksItems[index].title} name="title__file">
+    <textarea class="form__content-textarea" type="text" value=${booksItems[index].text} name="content__file"></textarea>
+    <button class="input__file-button btn__save" type="submit">Сохранить</button>
+    `;
+    readArea.append(node);
+  }
+
+  function deleteBook(key) {
+    const index = booksItems.findIndex((item) => item.id === Number(key));
+    const book = {
+      deleted: true,
+      ...booksItems[index]
+    };
+    booksItems = booksItems.filter((item) => item.id !== Number(key));
+    renderBooks(book);
+  }
+
+  const list = document.querySelector('.books__items');
+    list.addEventListener('click', (e) => {
+      if (e.target.classList.contains('done__book')) {
+        const itemKey = e.target.parentElement.parentElement.dataset.key;
+        toggleDone(itemKey);
+      }
+      
+      if (e.target.classList.contains('delete__book')) {
+        const itemKey = e.target.parentElement.parentElement.dataset.key;
+        deleteBook(itemKey);
+      }
+
+      if (e.target.classList.contains('read__book')) {
+        const itemKey = e.target.parentElement.parentElement.dataset.key;
+        readBook(itemKey);
+      }
+
+      if (e.target.classList.contains('edit__book')) {
+        const itemKey = e.target.parentElement.parentElement.dataset.key;
+        editBook(itemKey);
+      }
+    });
+
 document.addEventListener('DOMContentLoaded', () => {
   const books = localStorage.getItem('books');
 
   if (books) {
-    booksItem = JSON.parse(books);
-    booksItem.forEach((book) => {
-    renderBooks(book);
+    booksItems = JSON.parse(books);
+    booksItems.forEach((book) => {
+      renderBooks(book);
     });
   }
 });

@@ -11,36 +11,42 @@
 </head>
 <body>
   <main class="main">
-    <section class="list__books">
-      <div class="container">
-        <h2 class="section__title">Список книг</h2>
-        <ul class="books__items"></ul>
-      </div>
-    </section>
-    <section class="add__book">
-      <div class="container">
-        <h2 class="tabs__title">Добавить книгу</h2>
-        <div class="tabs">
-          <input type="radio" id="choice1" name="book" checked>
-          <label for="choice1">Написать самому</label>
-          <input type="radio" id="choice2" name="book">
-          <label for="choice2">Загрузить из файла</label>
-          <form class="form__content" id="content1">
-            <input class="form__content-input" type="text" placeholder="Название книги" name="title__file">
-            <textarea class="form__content-textarea" type="text" placeholder="Содержимое книги" name="content__file"></textarea>
-            <button class="input__file-button btn__save" type="submit">Сохранить</button>
-          </form>
-          <form class="form__content" id="content2">
-            <input class="form__content-input" type="text" placeholder="Название книги" name="title__file">
-            <div class="input__wrapper">
-              <input name="file" type="file" name="file" id="input__file" class="input input__file">
-              <label for="input__file" class="input__file-button">Выберите файл</label>
-              <button class="input__file-button btn__add" type="submit">Загрузить</button>
+    <div class="container">
+      <div class="page">
+        <sidebar class="sidebar">
+          <section class="list__books">
+            <div class="container">
+              <h2 class="section__title">Список книг</h2>
+              <ul class="books__items"></ul>
             </div>
-          </form>
-        </div>
+          </section>
+          <section class="add__book">
+              <h2 class="tabs__title">Добавить книгу</h2>
+              <div class="tabs">
+                <input type="radio" id="choice1" name="book" checked>
+                <label for="choice1">Написать самому</label>
+                <input type="radio" id="choice2" name="book">
+                <label for="choice2">Загрузить из файла</label>
+                <form class="form__content" id="content1">
+                  <input class="form__content-input" type="text" placeholder="Название книги" name="title__file">
+                  <textarea class="form__content-textarea" type="text" placeholder="Содержимое книги" name="content__file"></textarea>
+                  <button class="input__file-button btn__save" type="submit">Сохранить</button>
+                </form>
+                <form class="form__content" id="content2">
+                  <input class="form__content-input" type="text" placeholder="Название книги" name="title__file">
+                  <div class="input__wrapper">
+                    <input name="file" type="file" name="file" id="input__file" class="input input__file">
+                    <label for="input__file" class="input__file-button">Выберите файл</label>
+                    <button class="input__file-button btn__add" type="submit">Загрузить</button>
+                  </div>
+                </form>
+            </div>
+          </section>
+        </sidebar>
+        <section class="read-area">
+        </section>
       </div>
-    </section>
+    </div>
   </main>
 </body>
 </html>
