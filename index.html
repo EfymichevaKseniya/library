@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./reset.css">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./main.js"></script>
+  <title>Books Library</title>
+</head>
+<body>
+  <main class="main">
+    <section class="list__books">
+      <div class="container">
+        <h2 class="section__title">Список книг</h2>
+        <ul class="books__items"></ul>
+      </div>
+    </section>
+    <section class="add__book">
+      <div class="container">
+        <h2 class="tabs__title">Добавить книгу</h2>
+        <div class="tabs">
+          <input type="radio" id="choice1" name="book" checked>
+          <label for="choice1">Написать самому</label>
+          <input type="radio" id="choice2" name="book">
+          <label for="choice2">Загрузить из файла</label>
+          <form class="form__content" id="content1">
+            <input class="form__content-input" type="text" placeholder="Название книги" name="title__file">
+            <textarea class="form__content-textarea" type="text" placeholder="Содержимое книги" name="content__file"></textarea>
+            <button class="input__file-button btn__save" type="submit">Сохранить</button>
+          </form>
+          <form class="form__content" id="content2">
+            <input class="form__content-input" type="text" placeholder="Название книги" name="title__file">
+            <div class="input__wrapper">
+              <input name="file" type="file" name="file" id="input__file" class="input input__file">
+              <label for="input__file" class="input__file-button">Выберите файл</label>
+              <button class="input__file-button btn__add" type="submit">Загрузить</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
