@@ -1,14 +1,24 @@
+.body {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: #363636;
+}
+
 .container {
   width: 100%;
   max-width: 1100px;
-  padding: 0 15px;
   margin: 0 auto;
 }
 
 .page {
   display: grid;
   grid-template-columns: 30% 70%;
-  gap: 20px;
+  gap: 40px;
+  padding-top: 40px;
+}
+
+.section__title {
+  margin-bottom: 20px;
 }
 
 .tabs__title {
@@ -137,4 +147,48 @@
 
 .book__btn:hover {
   background: #ccc;
+}
+
+.read__area-title {
+  margin-bottom: 10px;
+  font-weight: 700;
+  font-size: 36px;
+}
+
+.read__area-text {
+  letter-spacing: 1px;
+}
+
+.read__area-form {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.read__area-input {
+  width: 70%;
+}
+
+.read__area-textarea {
+  resize: none;
+  max-height: 600px;
+}
+
+.read__area-btn {
+  border: 1px solid #000;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: center;
+  background: transparent;
+  padding: 2px 5px;
+}
+
+.read__area-btn:hover {
+  background: #ccc;
+}
+
+.empty {
+  color: red;
+  text-align: center;
 }

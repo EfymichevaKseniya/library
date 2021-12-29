@@ -98,7 +98,7 @@ const form = document.querySelector('#content2');
 
   function readBook(key) {
     const index = booksItems.findIndex((item) => item.id === Number(key));
-    const readArea = document.querySelector('.read-area');
+    const readArea = document.querySelector('.read__area');
     readArea.innerHTML = '';
 
     const node = document.createElement('div');
@@ -112,17 +112,34 @@ const form = document.querySelector('#content2');
 
   function editBook(key) {
     const index = booksItems.findIndex((item) => item.id === Number(key));
-    const readArea = document.querySelector('.read-area');
+    const readArea = document.querySelector('.read__area');
     readArea.innerHTML = '';
 
     const node = document.createElement('form');
-    node.setAttribute('class', 'form__content');
+    node.setAttribute('class', 'read__area-form');
     node.innerHTML = `
-    <input class="form__content-input" type="text" placeholder=${booksItems[index].title} name="title__file">
-    <textarea class="form__content-textarea" type="text" value=${booksItems[index].text} name="content__file"></textarea>
-    <button class="input__file-button btn__save" type="submit">Сохранить</button>
+    <input class="read__area-input" type="text" value=${booksItems[index].title} name="title__file">
+    <textarea class="read__area-textarea" type="text" name="content__file">${booksItems[index].text}</textarea>
+    <button class="read__area-btn" type="button">Сохранить</button>
     `;
     readArea.append(node);
+    const input = document.querySelector('.read__area-input');
+    const textarea = document.querySelector('.read__area-textarea');
+    const editBtn = document.querySelector('.read__area-btn');
+    
+    editBtn.addEventListener('click', () => {
+      if (input.value !== '' && textarea.value !== '') {
+        booksItems[index].title = input.value;
+        booksItems[index].text = textarea.value;
+        readArea.innerHTML = '';
+      } else {
+        const err = document.createElement('p');
+        err.setAttribute('class', 'empty');
+        err.textContent = 'Поля не могут быть пустыми';
+        node.before(err);
+      }
+      renderBooks(booksItems[index]);
+    });
   }
 
   function deleteBook(key) {
