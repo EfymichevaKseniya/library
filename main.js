@@ -1,16 +1,17 @@
 let booksItems = [];
 
-function renderBooks(book) {
+function renderBook(book) {
   localStorage.setItem('booksItems', JSON.stringify(booksItems));
 
   const list = document.querySelector('.books__items');
   const item = document.querySelector(`[data-key='${book.id}']`);
-
+  
   if (book.deleted) {
     item.remove();
     if (booksItems.length === 0) list.innerHTML = '';
     return
   }
+
   const isRead = book.checked ? 'done': '';
   const node = document.createElement('li');
   node.setAttribute('class', `book__item ${isRead}`);
@@ -25,6 +26,7 @@ function renderBooks(book) {
     </div>
   `;
 
+  
   if (item) {
     list.replaceChild(node, item);
   } else {
@@ -41,7 +43,7 @@ function addBook(title, text) {
   };
 
   booksItems.push(book);
-  renderBooks(book);
+  renderBook(book);
 }
 
 const form = document.querySelector('#content2');
@@ -77,23 +79,20 @@ const form = document.querySelector('#content2');
 
     const input = document.querySelector('.form__content-input');
     const textarea = document.querySelector('.form__content-textarea');
-    const btnAdd = document.querySelector('.btn__save');
 
-    btnAdd.addEventListener('click', () => {
-      const title = input.value.trim();
-      const text = textarea.value.trim();
-      if (text !== '') {
-        addBook(title, text);
-        input.value = '';
-        textarea.value = '';
-      }
-    });
+    const title = input.value.trim();
+    const text = textarea.value.trim();
+    if (text !== '') {
+      addBook(title, text);
+      input.value = '';
+      textarea.value = '';
+    }
   });
 
   function toggleDone(key) {
     const index = booksItems.findIndex((item) => item.id === Number(key));
     booksItems[index].checked = !booksItems[index].checked;
-    renderBooks(booksItems[index]);
+    renderBook(booksItems[index]);
   }
 
   function readBook(key) {
@@ -138,7 +137,7 @@ const form = document.querySelector('#content2');
         err.textContent = 'Поля не могут быть пустыми';
         node.before(err);
       }
-      renderBooks(booksItems[index]);
+      renderBook(booksItems[index]);
     });
   }
 
@@ -149,10 +148,72 @@ const form = document.querySelector('#content2');
       ...booksItems[index]
     };
     booksItems = booksItems.filter((item) => item.id !== Number(key));
-    renderBooks(book);
+    renderBook(book);
   }
 
-  const list = document.querySelector('.books__items');
+  function shiftBook(key) {
+    const dropBook = document.querySelector(`.book__item[data-key="${key}"]`);
+    const dropzone = document.querySelector('.books__items-favorite');
+
+    dropBook.onmousedown = function(e) {
+
+    let coords = getCoords(dropBook);
+    let shiftX = e.pageX - coords.left;
+    let shiftY = e.pageY - coords.top;
+
+    dropBook.classList.add('move');
+    dropzone.appendChild(dropBook);
+    moveAt(e);
+    dropBook.onmousedown = null;
+
+    function moveAt(e) {
+      dropBook.style.left = e.pageX - shiftX + 'px';
+      dropBook.style.top = e.pageY - shiftY + 'px';
+    }
+
+    document.onmousemove = function(e) {
+      moveAt(e);
+    };
+
+    dropBook.onmouseup = function() {
+      document.onmousemove = null;
+      dropBook.onmouseup = null;
+      dropBook.classList.remove('move');
+      dropBook.removeAttribute('style');
+    };
+
+    }
+
+    dropBook.ondragstart = function() {
+      return false;
+    };
+
+    function getCoords(elem) {
+      let box = elem.getBoundingClientRect();
+      return {
+        top: box.top + scrollY,
+        left: box.left + scrollX,
+      };
+    }
+  }
+
+  // function dragstart_handler(key) {
+  //   // Добавить id целевого элемента в объект передачи данных
+  //   key.dataTransfer.setData("application/my-app", ev.target.id);
+  //   key.dataTransfer.effectAllowed = "copy";
+  // }
+  // function dragover_handler(key) {
+  //   key.preventDefault();
+  //   key.dataTransfer.dropEffect = "copy"
+  // }
+  // function drop_handler(key) {
+  //   key.preventDefault();
+  //   // Получить id целевого элемента и добавить перемещаемый элемент в его DOM
+  //   const data = key.dataTransfer.getData("application/my-app");
+  //   key.target.appendChild(document.getElementById(data));
+  // }
+
+  function bookInteractive(list) {
     list.addEventListener('click', (e) => {
       if (e.target.classList.contains('done__book')) {
         const itemKey = e.target.parentElement.parentElement.dataset.key;
@@ -173,15 +234,29 @@ const form = document.querySelector('#content2');
         const itemKey = e.target.parentElement.parentElement.dataset.key;
         editBook(itemKey);
       }
+
+      if (e.target.classList.contains('book__item')) {
+        const itemKey = e.target.dataset.key;
+        // dragstart_handler(itemKey);
+        // dragover_handler(itemKey);
+        // drop_handler(itemKey);
+        shiftBook(itemKey);
+      }
     });
+  }
+
+  // const list = document.querySelector('.books__items');
+    
 
 document.addEventListener('DOMContentLoaded', () => {
   const books = localStorage.getItem('books');
+  bookInteractive(document.querySelector('.books__items'));
+  bookInteractive(document.querySelector('.books__items-favorite'));
 
   if (books) {
     booksItems = JSON.parse(books);
     booksItems.forEach((book) => {
-      renderBooks(book);
+      renderBook(book);
     });
   }
 });

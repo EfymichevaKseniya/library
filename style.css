@@ -141,10 +141,6 @@
   padding: 2px 5px;
 }
 
-.book__item.done {
-  background: #1bbc9b;
-}
-
 .book__btn:hover {
   background: #ccc;
 }
@@ -188,7 +184,16 @@
   background: #ccc;
 }
 
+.done {
+  background: #1bbc9b;
+}
+
 .empty {
   color: red;
   text-align: center;
+}
+
+.move {
+  position: absolute;
+  z-index: 1000;
 }
